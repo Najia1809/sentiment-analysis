@@ -70,12 +70,14 @@
 <body>
     <div class="container">
         <h1>Sentence Share</h1>
+        <!-- Form to submit a new sentence for sentiment analysis -->
         <form method="POST">
             {% csrf_token %}
             <textarea name="text" class="input-box" placeholder="Enter your sentence here..." required></textarea>
             <button type="submit" class="btn">Post</button>
         </form>
         
+        <!-- Display Sentences with Sentiment Analysis -->
         <div class="sentence-container">
             {% for sentence in sentences %}
                 <div class="sentence">
@@ -83,10 +85,13 @@
                         <strong>{{ sentence.user.username }}</strong> - {{ sentence.created_at|date:"F d, Y, g:i a" }}
                         <p>{{ sentence.text }}</p>
                     </div>
+                    <!-- Show the sentiment color-coded -->
                     <span class="sentiment {{ sentence.sentiment }}">{{ sentence.sentiment }}</span>
                 </div>
             {% endfor %}
         </div>
+        
+        <!-- Sign Out Button -->
         <br>
         <form method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
@@ -95,3 +100,4 @@
     </div>
 </body>
 </html>
+
