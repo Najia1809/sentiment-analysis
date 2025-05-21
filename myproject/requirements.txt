@@ -1,3 +1,5 @@
 django
 scikit-learn
 nltk
+psycopg2-binary
+
