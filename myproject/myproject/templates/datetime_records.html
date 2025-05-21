@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Date/Time Records</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #0d101d, #36323a);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        ul li {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Manage Date/Time Records</h2>
+
+    <!-- Show Success/Error Messages -->
+    {% if messages %}
+        <ul class="messages alert alert-info">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Date/Time Records List -->
+    <h3>Date/Time Records</h3>
+    <ul>
+        {% for record in datetime_records %}
+            <li>
+                {{ record.timestamp }} - <b>{{ record.sentence.text }}</b>
+                <div>
+                    <a href="?delete={{ record.pk }}" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </li>
+        {% empty %}
+            <li>No date/time records found.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <!-- Add or Delete Date/Time Record -->
+    {% if request.GET.delete %}
+        <h3>Are you sure you want to delete this record?</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="{% url 'datetime_record_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+
+    {% else %}
+        <h3>Add a New Date/Time Record</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <label>Sentence:</label>
+            <select name="sentence" class="form-control">
+                {% for sentence in sentences %}
+                    <option value="{{ sentence.id }}">{{ sentence.text }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="submit" class="btn btn-primary mt-3">Add Date/Time Record</button>
+        </form>
+    {% endif %}
+</div>
+
+</body>
+</html>

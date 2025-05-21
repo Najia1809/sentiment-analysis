@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentence Share</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d101d, #36323a);
+            margin: 0;
+            flex-direction: column;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 500px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .btn {
+            background: #546fe5;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            width: 100%;
+        }
+        .btn:hover {
+            background: #5643a3;
+        }
+        .sentence-container {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .sentence {
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .sentiment {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+        }
+        .positive { background: lightblue; color: blue; }
+        .negative { background: lightcoral; color: red; }
+        .neutral { background: lightgray; color: gray; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Sentence Share</h1>
+        <!-- Form to submit a new sentence for sentiment analysis -->
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="text" class="input-box" placeholder="Enter your sentence here..." required></textarea>
+            <button type="submit" class="btn">Post</button>
+        </form>
+        
+        <!-- Display Sentences with Sentiment Analysis -->
+        <div class="sentence-container">
+            {% for sentence in sentences %}
+                <div class="sentence">
+                    <div>
+                        <strong>{{ sentence.user.username }}</strong> - {{ sentence.created_at|date:"F d, Y, g:i a" }}
+                        <p>{{ sentence.text }}</p>
+                    </div>
+                    <!-- Show the sentiment color-coded -->
+                    <span class="sentiment {{ sentence.sentiment }}">{{ sentence.sentiment }}</span>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Sign Out Button -->
+        <br>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn" style="background: red;">Sign Out</button>
+        </form>
+    </div>
+</body>
+</html>
+
